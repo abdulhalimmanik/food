@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import Search from './components/Search';
+import Food from './components/Food';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  state = {recipes: []};
+
+  onClickSearch = search => {
+    
+    axios.get(`https://www.food2fork.com/api/search?key=3fd71b76fd36502aa04f1e6fb19d9fc1&q=${search}`).then(function(response){
+      if (response.data.recipes)
+        this.setState({ recipes: response.data.recipes });
+    }).then(function(error){
+      console.log(error);
+    });
+
+  };
+  
+
+  render() {
+    return (
+        <div className="ui container">
+          <Search onClickSearch={this.onClickSearch} />
+          <Food recipes={this.state.recipes} />          
+        </div>
+    )
+  }
+
 }
 
 export default App;
